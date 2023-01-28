@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import Users from "../modals/UserModal.js";
 
 export const signUpDataPost = async (req, res) => {
@@ -21,10 +22,14 @@ export const signUpDataPost = async (req, res) => {
 
 export const signInDataPost = async (req, res) => {
   const { credential, password } = req.body;
-  const passwordCheck = (userPassword) => {
-    bcrypt.compare(password, userPassword, (err, result) => {
+  const passwordCheck = (user) => {
+    bcrypt.compare(password, user.password, async (err, result) => {
       if (result) {
-        return res.sendStatus(200);
+        const jwtToken = await jwt.sign(
+          { id: user.id, email: user.email, phone: user.phone },
+          "secret-key"
+        );
+        return res.status(200).send({ jwtToken });
       } else {
         return res.status(401).send("Password Incorrect");
       }
@@ -36,17 +41,17 @@ export const signInDataPost = async (req, res) => {
         where: { email: credential }
       });
       if (emailExisted) {
-        passwordCheck(emailExisted.password);
+        passwordCheck(emailExisted);
       } else {
-        return res.status(401).send("Email Not Found");
+        return res.status(404).send("Email Not Found");
       }
     } else {
       const phone = Number(credential);
       const phoneExisted = await Users.findOne({ where: { phone: phone } });
       if (phoneExisted) {
-        passwordCheck(phoneExisted.password);
+        passwordCheck(phoneExisted);
       } else {
-        return res.status(401).send("Phone Number Not Found");
+        return res.status(404).send("Phone Number Not Found");
       }
     }
   } catch (error) {
