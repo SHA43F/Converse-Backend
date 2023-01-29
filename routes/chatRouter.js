@@ -1,13 +1,9 @@
 import express from "express";
+import { fetchChatData, storeChatData } from "../controllers/chatCtrl.js";
 
 const router = express.Router();
 
-const chatArray = [];
+router.post("/chat", storeChatData);
 
-router.post("/chat", (req, res) => {
-  const data = req.body;
-  chatArray.push(data);
-  res.status(200).send(chatArray);
-});
-
+router.get("/chat", fetchChatData);
 export default router;
