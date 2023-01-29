@@ -26,7 +26,12 @@ export const signInDataPost = async (req, res) => {
     bcrypt.compare(password, user.password, async (err, result) => {
       if (result) {
         const jwtToken = await jwt.sign(
-          { id: user.id, email: user.email, phone: user.phone },
+          {
+            id: user.id,
+            userName: user.userName,
+            email: user.email,
+            phone: user.phone
+          },
           "secret-key"
         );
         return res.status(200).send({ jwtToken });
