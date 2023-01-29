@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import Users from "./modals/UserModal.js";
+import Chat from "./modals/chatModal.js";
 import sequelize from "./database/sqlDatabase.js";
 import authRouter from "./routes/authRouter.js";
 import chatRouter from "./routes/chatRouter.js";
@@ -11,6 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(authRouter);
 app.use(chatRouter);
+
+Users.hasMany(Chat);
 
 sequelize
   .sync({ force: false })
