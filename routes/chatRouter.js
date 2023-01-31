@@ -6,4 +6,5 @@ const router = express.Router();
 router.post("/chat", storeChatData);
 
 router.get("/chat", fetchChatData);
+
 export default router;

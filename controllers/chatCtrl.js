@@ -1,12 +1,15 @@
 import Chat from "../modals/chatModal.js";
+import Users from "../modals/UserModal.js";
 
 export const storeChatData = async (req, res) => {
-  const { userId, userName, message } = req.body;
+  const { userId, message, toId, toName, userName } = req.body;
   try {
     const response = await Chat.create({
-      userName: userName,
       message: message,
-      UserId: userId
+      userId: userId,
+      userName: userName,
+      toId: toId,
+      toName: toName
     });
     res.status(200).send(response);
   } catch (error) {
@@ -15,6 +18,9 @@ export const storeChatData = async (req, res) => {
 };
 
 export const fetchChatData = async (req, res) => {
-  const chatData = await Chat.findAll();
+  const { userid, toid } = req.headers;
+  const chatData = await Chat.findAll({
+    where: { userId: userid }
+  });
   res.status(200).send(chatData);
 };

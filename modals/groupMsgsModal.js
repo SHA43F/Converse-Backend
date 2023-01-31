@@ -1,14 +1,18 @@
 import Sequelize from "sequelize";
 import sequelize from "../database/sqlDatabase.js";
 
-const Chat = sequelize.define("chats", {
+const GroupMsgs = sequelize.define("group-messages", {
   id: {
     type: Sequelize.INTEGER,
-    primaryKey: true,
     allowNull: false,
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true
   },
   message: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  groupName: {
     type: Sequelize.STRING,
     allowNull: false
   },
@@ -16,14 +20,10 @@ const Chat = sequelize.define("chats", {
     type: Sequelize.STRING,
     allowNull: false
   },
-  toName: {
+  groupId: {
     type: Sequelize.STRING,
-    allowNull: false
-  },
-  toId: {
-    type: Sequelize.INTEGER,
     allowNull: false
   }
 });
 
-export default Chat;
+export default GroupMsgs;

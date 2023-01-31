@@ -1,29 +1,21 @@
 import Sequelize from "sequelize";
 import sequelize from "../database/sqlDatabase.js";
 
-const Chat = sequelize.define("chats", {
+const GroupUsers = sequelize.define("group-users", {
   id: {
     type: Sequelize.INTEGER,
-    primaryKey: true,
     allowNull: false,
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true
   },
-  message: {
+  groupName: {
     type: Sequelize.STRING,
     allowNull: false
   },
   userName: {
     type: Sequelize.STRING,
     allowNull: false
-  },
-  toName: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  toId: {
-    type: Sequelize.INTEGER,
-    allowNull: false
   }
 });
 
-export default Chat;
+export default GroupUsers;
