@@ -7,7 +7,15 @@ const Friends = sequelize.define("friends", {
     primaryKey: true,
     allowNull: false,
     autoIncrement: true
-  }
+  },
+  // userId: {
+  //   type: Sequelize.INTEGER,
+  //   allowNull: false
+  // }
+  // friendId: {
+  //   type: Sequelize.INTEGER,
+  //   allowNull: false
+  // }
 });
 
 export default Friends;

@@ -20,7 +20,8 @@ export const storeChatData = async (req, res) => {
 export const fetchChatData = async (req, res) => {
   const { userid, toid } = req.headers;
   const chatData = await Chat.findAll({
-    where: { userId: userid }
+    where: { userId: [userid, toid], toId: [userid, toid] },
+    order: [["createdAt", "ASC"]]
   });
   res.status(200).send(chatData);
 };

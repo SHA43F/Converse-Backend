@@ -84,7 +84,8 @@ export const sendGroupMessage = async (req, res) => {
 export const fetchGroupMessages = async (req, res) => {
   const { groupid } = req.headers;
   const groupChatData = await GroupMsgs.findAll({
-    where: { groupId: groupid }
+    where: { groupId: groupid },
+    order: [["createdAt", "ASC"]]
   });
   res.status(200).send(groupChatData);
 };
