@@ -1,3 +1,4 @@
+import GroupAdmins from "../modals/groupAdminModal.js";
 import Group from "../modals/groupModal.js";
 import GroupMsgs from "../modals/groupMsgsModal.js";
 import GroupUsers from "../modals/groupUsersModal.js";
@@ -5,20 +6,27 @@ import Users from "../modals/UserModal.js";
 
 export const createGroup = async (req, res) => {
   const { groupName, userId, userName } = req.body;
-  const response1 = await Group.create({
-    groupName: groupName,
-    totalUsers: 1,
-    adminId: userId,
-    adminUser: userName,
-    userName: userName
-  });
-  const response2 = await GroupUsers.create({
-    groupId: response1.id,
-    userId: userId,
-    groupName: groupName,
-    userName: userName
-  });
-  res.status(200).send(response2);
+  try {
+    const response1 = await Group.create({
+      groupName: groupName,
+      adminId: userId,
+      adminUser: userName,
+      userName: userName
+    });
+    const response2 = await GroupUsers.create({
+      groupId: response1.id,
+      userId: userId,
+      groupName: groupName,
+      userName: userName
+    });
+    const response3 = await GroupAdmins.create({
+      groupId: response1.id,
+      userId: userId,
+      groupName: groupName,
+      adminName: userName
+    });
+    res.status(200).send(response3);
+  } catch (error) {}
 };
 
 export const fetchGroups = async (req, res) => {
@@ -29,24 +37,26 @@ export const fetchGroups = async (req, res) => {
 
 export const addGroupMember = async (req, res) => {
   const { groupId, groupName } = req.body;
-  const userExists = await Users.findOne({
-    where: { userName: req.body.userName }
-  });
-  if (!!userExists) {
-    const groupCreated = await GroupUsers.create({
-      groupName: groupName,
-      groupId: groupId,
-      userId: userExists.id,
-      userName: userExists.userName
+  try {
+    const userExists = await Users.findOne({
+      where: { userName: req.body.userName }
     });
-    return res.status(200).send(groupCreated);
+    if (!!userExists) {
+      const groupCreated = await GroupUsers.create({
+        groupName: groupName,
+        groupId: groupId,
+        userId: userExists.id,
+        userName: userExists.userName
+      });
+      return res.status(200).send(groupCreated);
+    }
+  } catch (error) {
+    res.status(404).send("Some Error Happened");
   }
-  res.status(404).send("User not found");
 };
 
 export const fetchGroupMembers = async (req, res) => {
   const { groupid } = req.headers;
-  console.log("asdfghj", groupid);
   try {
     const groupUsersData = await GroupUsers.findAll({
       where: { groupId: groupid },
@@ -77,4 +87,48 @@ export const fetchGroupMessages = async (req, res) => {
     where: { groupId: groupid }
   });
   res.status(200).send(groupChatData);
+};
+
+export const groupAdminCheck = async (req, res) => {
+  const { groupid, userid } = req.headers;
+  try {
+    const isAdminData = await GroupAdmins.findAll({
+      where: { groupId: groupid },
+      attributes: ["userId"]
+    });
+    const adminUsersId = isAdminData.map((user) => user.userId);
+    res.status(200).send(adminUsersId);
+  } catch (error) {
+    res.status(401).send(error);
+  }
+};
+
+export const makeGroupAdmin = async (req, res) => {
+  const { userId, userName, groupId, groupName } = req.body;
+  try {
+    const response = await GroupAdmins.create({
+      groupId: groupId,
+      userId: userId,
+      groupName: groupName,
+      adminName: userName
+    });
+    res.status(200).send(response);
+  } catch (error) {
+    res.status(401).send(error);
+  }
+};
+
+export const removeGroupMember = async (req, res) => {
+  const { userId, groupId } = req.body;
+  try {
+    await GroupUsers.destroy({
+      where: {
+        userId: userId,
+        groupId: groupId
+      }
+    });
+    res.sendStatus(201);
+  } catch (error) {
+    res.status(401).send("Error while removing user..");
+  }
 };

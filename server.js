@@ -6,6 +6,7 @@ import Chat from "./modals/chatModal.js";
 import Groups from "./modals/groupModal.js";
 import GroupUsers from "./modals/groupUsersModal.js";
 import GroupMsgs from "./modals/groupMsgsModal.js";
+import GroupAdmins from "./modals/groupAdminModal.js";
 
 import sequelize from "./database/sqlDatabase.js";
 import authRouter from "./routes/authRouter.js";
@@ -26,7 +27,9 @@ app.use(groupRouter);
 Users.hasMany(Groups, { foreignKey: "adminId" });
 Users.hasMany(Chat);
 Groups.belongsToMany(Users, { through: GroupUsers });
+Groups.belongsToMany(Users, { through: GroupAdmins });
 Users.hasMany(GroupMsgs);
+Groups.hasMany(GroupMsgs);
 Users.belongsToMany(Users, { as: "friend", through: Friends });
 
 sequelize

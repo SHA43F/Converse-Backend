@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../database/sqlDatabase.js";
 
-const Groups = sequelize.define("groups", {
+const GroupAdmins = sequelize.define("group-admins", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -12,14 +12,11 @@ const Groups = sequelize.define("groups", {
     type: Sequelize.STRING,
     allowNull: false
   },
-  adminUser: {
+
+  adminName: {
     type: Sequelize.STRING,
-    allowNull: false
-  },
-  adminId: {
-    type: Sequelize.INTEGER,
     allowNull: false
   }
 });
 
-export default Groups;
+export default GroupAdmins;
