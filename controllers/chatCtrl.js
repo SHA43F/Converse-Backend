@@ -21,11 +21,15 @@ export const storeChatData = async (req, res) => {
 
 export const fetchChatData = async (req, res) => {
   const { userid, toid } = req.headers;
-  const chatData = await Chat.findAll({
-    where: { userId: [userid, toid], toId: [userid, toid] },
-    order: [["createdAt", "ASC"]]
-  });
-  res.status(200).send(chatData);
+  try {
+    const chatData = await Chat.findAll({
+      where: { userId: [userid, toid], toId: [userid, toid] },
+      order: [["createdAt", "ASC"]]
+    });
+    res.status(200).send(chatData);
+  } catch (error) {
+    res.status(401).send(error);
+  }
 };
 
 export const sendFile = async (req, res) => {
@@ -41,6 +45,19 @@ export const sendFile = async (req, res) => {
     });
     console.log(response);
     res.status(200).send(response);
+  } catch (error) {
+    res.status(401).send(error);
+  }
+};
+
+export const fetchFile = async (req, res) => {
+  const { userid, toid } = req.headers;
+  try {
+    const filesData = await Files.findAll({
+      where: { userId: [userid, toid], toId: [userid, toid] },
+      order: [["createdAt", "ASC"]]
+    });
+    res.status(200).send(filesData);
   } catch (error) {
     res.status(401).send(error);
   }
