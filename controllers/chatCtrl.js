@@ -1,5 +1,7 @@
 import Chat from "../modals/chatModal.js";
+import Files from "../modals/fileSharingModal.js";
 import Users from "../modals/UserModal.js";
+import S3Services from "../services/S3Services.js";
 
 export const storeChatData = async (req, res) => {
   const { userId, message, toId, toName, userName } = req.body;
@@ -24,4 +26,22 @@ export const fetchChatData = async (req, res) => {
     order: [["createdAt", "ASC"]]
   });
   res.status(200).send(chatData);
+};
+
+export const sendFile = async (req, res) => {
+  const { userId, fileUrl, fileName, toId, toName, userName } = req.body;
+  try {
+    const response = await Files.create({
+      fileUrl: fileUrl,
+      fileName: fileName,
+      userId: userId,
+      userName: userName,
+      toId: toId,
+      toName: toName
+    });
+    console.log(response);
+    res.status(200).send(response);
+  } catch (error) {
+    res.status(401).send(error);
+  }
 };

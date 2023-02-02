@@ -14,6 +14,7 @@ import authRouter from "./routes/authRouter.js";
 import chatRouter from "./routes/chatRouter.js";
 import groupRouter from "./routes/groupRouter.js";
 import FriendsRouter from "./routes/freindsRouter.js";
+import Files from "./modals/fileSharingModal.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(FriendsRouter);
 
 Users.hasMany(Groups, { foreignKey: "adminId" });
 Users.hasMany(Chat);
+Users.hasMany(Files)
 Groups.belongsToMany(Users, { through: GroupUsers });
 Groups.belongsToMany(Users, { through: GroupAdmins });
 Users.hasMany(GroupMsgs);
@@ -42,7 +44,7 @@ Users.belongsToMany(Users, {
 sequelize
   .sync({ force: false })
   .then(() => {
-    app.listen(5000);
+    app.listen(process.env.PORT || 5000);
   })
   .catch((err) => {
     console.log(err);
