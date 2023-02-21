@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { CronJob } from "cron";
+// import { CronJob } from "cron";
 
 import Users from "./modals/UserModal.js";
 import Chat from "./modals/chatModal.js";
@@ -20,18 +20,20 @@ import ArchivedChat from "./modals/archivedChatModal.js";
 
 const app = express();
 
-var Job = new CronJob({
-  cronTime: "00 00 00 * * * ",
-  onTick: async () => {
-    console.log("This runs every midnight");
-    const chatData = await Chat.findAll();
-    const chatArray = chatData.map((chat) => chat.dataValues);
-    const response = ArchivedChat.bulkCreate(chatArray);
-  },
-  start: true,
-  runOnInit: true
-});
-Job.start();
+// var Job = new CronJob({
+//   cronTime: "00 00 00 * * * ",
+//   onTick: async () => {
+//     console.log("This runs every midnight");
+//     const chatData = await Chat.findAll();
+//     const chatArray = chatData.map((chat) => chat.dataValues);
+//     const response = ArchivedChat.bulkCreate(chatArray);
+//   },
+//   start: true,
+//   runOnInit: true
+// });
+// Job.start();
+
+
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
