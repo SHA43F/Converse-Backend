@@ -3,8 +3,8 @@ import "dotenv/config";
 
 const S3Services = (data, filename) => {
   const s3Bucket = new AWS.S3({
-    accessKeyId: IAM_USER_KEY,
-    secretAccessKey: ACCESS_SECRET_KEY
+    accessKeyId: process.env.IAM_USER_KEY,
+    secretAccessKey: process.env.ACCESS_SECRET_KEY
   });
 
   var params = {

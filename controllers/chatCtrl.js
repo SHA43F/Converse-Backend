@@ -1,7 +1,5 @@
 import Chat from "../modals/chatModal.js";
 import Files from "../modals/fileSharingModal.js";
-import Users from "../modals/UserModal.js";
-import S3Services from "../services/S3Services.js";
 
 export const storeChatData = async (req, res) => {
   const { userId, message, toId, toName, userName } = req.body;

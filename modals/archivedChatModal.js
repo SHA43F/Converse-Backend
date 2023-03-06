@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../database/sqlDatabase.js";
 
-const ArchivedChat = sequelize.define("archived", {
+const ArchivedChat = sequelize.define("archive", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

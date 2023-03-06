@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-// import { CronJob } from "cron";
+import { CronJob } from "cron";
 
 import Users from "./modals/UserModal.js";
 import Chat from "./modals/chatModal.js";
@@ -20,19 +20,18 @@ import ArchivedChat from "./modals/archivedChatModal.js";
 
 const app = express();
 
-// var Job = new CronJob({
-//   cronTime: "00 00 00 * * * ",
-//   onTick: async () => {
-//     console.log("This runs every midnight");
-//     const chatData = await Chat.findAll();
-//     const chatArray = chatData.map((chat) => chat.dataValues);
-//     const response = ArchivedChat.bulkCreate(chatArray);
-//   },
-//   start: true,
-//   runOnInit: true
-// });
-// Job.start();
-
+var Job = new CronJob({
+  cronTime: "00 00 00 * * * ",
+  onTick: async () => {
+    console.log("This Cron Job runs every midnight");
+    const chatData = await Chat.findAll();
+    ArchivedChat.destroy({truncate: true, cascade: false})
+    const chatArray = chatData.map((chat) => chat.dataValues);
+    ArchivedChat.bulkCreate(chatArray);
+  },
+  start: true,
+  runOnInit: true
+});
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
@@ -57,6 +56,8 @@ Users.belongsToMany(Users, {
   foreignKey: "userId",
   otherKey: "friendId"
 });
+
+Job.start();
 
 sequelize
   .sync({ force: false })
